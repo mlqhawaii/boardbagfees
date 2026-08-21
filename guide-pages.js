@@ -1,0 +1,14 @@
+
+const esc=(s='')=>String(s).replace(/[&<>\'\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const moneyValue=(text='')=>{const m=String(text).match(/(?:USD\s*)?\$\s?(\d+(?:\.\d{1,2})?)|USD\s*(\d+(?:\.\d{1,2})?)/i);return m?Number(m[1]||m[2]):null};
+const feeText=a=>String(a?.policy_facts?.fee_text||a?.surfboard_treatment||'See policy').trim();
+const isIncluded=a=>/included|free|standard checked|normal checked|no special item fee/i.test([feeText(a),a?.surfboard_treatment].join(' ')) && !/not free|not included/i.test([feeText(a),a?.surfboard_treatment].join(' '));
+function card(a){const f=feeText(a); return `<article class="airline-card"><h3><a href="/airlines/${encodeURIComponent(a.slug||'')}">${esc(a.airline)}</a></h3><div class="fee">${esc(f)}</div><div class="rating">${esc(a.surf_rating||'Current policy tracked')}</div><small>${esc(a.size_rule||'Check current size and weight limits before booking.')}</small><a class="view" href="/airlines/${encodeURIComponent(a.slug||'')}">See current policy + traveler reports →</a></article>`}
+async function loadGuide(){try{const r=await fetch('/api/airlines',{cache:'no-store'});if(!r.ok)throw new Error();const all=await r.json();try{const ur=await fetch('/api/update-status',{cache:'no-store'});if(ur.ok){const us=await ur.json();if(us.last_success_at){const d=new Date(us.last_success_at);const p=Number.isNaN(d.getTime())?String(us.last_success_at).slice(0,10):d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric',timeZone:'Pacific/Honolulu'});document.querySelectorAll('[data-last-checked]').forEach(x=>x.textContent=p)}}}catch{}const type=document.body.dataset.guide;let list=[];
+if(type==='best') list=all.slice().sort((a,b)=>(Number(b.surf_rating_score)||-1)-(Number(a.surf_rating_score)||-1)).slice(0,18);
+else if(type==='included') list=all.filter(isIncluded).sort((a,b)=>(Number(b.surf_rating_score)||-1)-(Number(a.surf_rating_score)||-1));
+else if(type==='compare') list=all.slice().sort((a,b)=>{const ai=isIncluded(a)?-1:(moneyValue(feeText(a))??9999);const bi=isIncluded(b)?-1:(moneyValue(feeText(b))??9999);return ai-bi || (Number(b.surf_rating_score)||0)-(Number(a.surf_rating_score)||0)}).slice(0,30);
+else {const wanted=(document.body.dataset.airlines||'').split(',').filter(Boolean);list=wanted.map(sl=>all.find(a=>a.slug===sl)).filter(Boolean)}
+const grid=document.querySelector('#liveAirlines');if(grid)grid.innerHTML=list.length?list.map(card).join(''):'<div class="empty">No matching live records are available right now. Use the full airline comparison for the latest policy data.</div>';
+}catch(e){const grid=document.querySelector('#liveAirlines');if(grid)grid.innerHTML='<div class="empty">Live airline data is temporarily unavailable. Please try again shortly.</div>'}}
+loadGuide();

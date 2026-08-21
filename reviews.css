@@ -1,0 +1,54 @@
+
+/* ===== Traveler reports — additive v4 feature, preserves the v3 reference theme ===== */
+.traveler-reports{margin:42px 14px 0;padding:30px;border:1px solid #dfe8ed;border-radius:16px;background:#fff;box-shadow:0 12px 34px rgba(6,43,77,.05)}
+.traveler-reports-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:22px}.traveler-reports-head h2{font-size:30px;line-height:1.1;margin:4px 0 6px;color:#062b4d}.traveler-reports-head p{margin:0;color:#536d7d;max-width:660px;line-height:1.55}.traveler-pill{white-space:nowrap;background:#eef7f8;color:#0b5d7b;border:1px solid #d3e9ec;border-radius:999px;padding:8px 11px;font-size:11px;font-weight:800}
+.traveler-layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(310px,.95fr);gap:20px}.traveler-form-wrap,.traveler-list-wrap{border:1px solid #e3ebef;border-radius:14px;padding:20px;background:#fbfdfe}.traveler-form-wrap h3,.traveler-list-wrap h3{margin:0 0 5px;color:#062b4d;font-size:18px}.traveler-sub{font-size:12px;color:#67808e;margin:0 0 15px;line-height:1.45}.traveler-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.traveler-field{display:flex;flex-direction:column;gap:5px}.traveler-field.wide{grid-column:1/-1}.traveler-field label{font-size:10px;letter-spacing:.07em;text-transform:uppercase;font-weight:800;color:#5e7887}.traveler-field input,.traveler-field select,.traveler-field textarea{width:100%;border:1px solid #d8e4e9;border-radius:9px;background:#fff;color:#102d3d;font:inherit;font-size:13px;padding:10px 11px;outline:none}.traveler-field textarea{min-height:98px;resize:vertical}.traveler-field input:focus,.traveler-field select:focus,.traveler-field textarea:focus{border-color:#6fb1c2;box-shadow:0 0 0 3px rgba(15,143,162,.09)}.traveler-submit{grid-column:1/-1;display:flex;align-items:center;gap:12px;flex-wrap:wrap}.traveler-submit button,.share-experience-btn{border:0;background:#062b4d;color:#fff;border-radius:8px;padding:11px 15px;font-weight:800;font-size:12px;cursor:pointer;text-decoration:none}.traveler-submit button:hover,.share-experience-btn:hover{background:#0a3c65}.traveler-submit button:disabled{opacity:.6;cursor:wait}.traveler-status{font-size:12px;color:#456574}.traveler-status.ok{color:#16753c}.traveler-status.err{color:#b3261e}
+.traveler-list{display:grid;gap:10px}.traveler-review{border-top:1px solid #e3ebef;padding-top:12px}.traveler-review:first-child{border-top:0;padding-top:0}.traveler-review-top{display:flex;justify-content:space-between;gap:10px;align-items:center}.traveler-stars{color:#e59b00;letter-spacing:1px;font-size:13px}.traveler-name{font-weight:800;color:#183d57;font-size:13px}.traveler-meta{font-size:11px;color:#708692;margin:4px 0 6px}.traveler-comment{font-size:13px;line-height:1.5;color:#395868;margin:0}.traveler-empty{font-size:13px;line-height:1.55;color:#647c89;background:#fff;border:1px dashed #d6e2e7;border-radius:10px;padding:14px}.traveler-fee{font-weight:800;color:#0b5d7b}.share-experience-inline{display:inline-block;margin-top:8px;font-size:10px!important;padding:7px 9px!important}.policy .share-experience-inline{color:#fff!important}.card .share-experience-inline{margin-left:7px}
+@media(max-width:850px){.traveler-layout{grid-template-columns:1fr}.traveler-reports-head{align-items:flex-start;flex-direction:column}.traveler-pill{white-space:normal}}@media(max-width:600px){.traveler-reports{margin:28px 7px 0;padding:18px}.traveler-form{grid-template-columns:1fr}.traveler-field.wide,.traveler-submit{grid-column:auto}.traveler-reports-head h2{font-size:25px}}
+
+/* Detail-page version */
+.page .traveler-reports{margin:30px 0 0}.page .traveler-layout{grid-template-columns:1fr 1fr}@media(max-width:760px){.page .traveler-layout{grid-template-columns:1fr}}
+
+/* Board/bag outcome reporting */
+.traveler-outcomes{display:flex;gap:6px;flex-wrap:wrap;margin:7px 0}.traveler-outcome,.traveler-claim{display:inline-flex;align-items:center;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:800;line-height:1.1}.traveler-outcome.ok{background:#edf8f0;color:#1e6d3c;border:1px solid #cfe9d7}.traveler-outcome.issue{background:#fff3ef;color:#a13c25;border:1px solid #f2d1c7}.traveler-claim{background:#eef6f9;color:#285c72;border:1px solid #d4e6ec}.traveler-damage{font-size:12px;line-height:1.5;color:#486674;margin:7px 0 0;padding:9px 10px;background:#fff;border-left:3px solid #bfdce5;border-radius:4px}
+
+.traveler-handling-rating{display:flex;align-items:center;gap:7px;margin:7px 0 2px;font-size:11px;color:#355f70}.traveler-handling-rating strong{font-weight:800}.traveler-handling-rating .traveler-stars{font-size:13px}.traveler-handling-rating small{font-weight:800;color:#657f8b}
+
+/* Airline-page traveler review summary */
+.traveler-rating-summary-host{margin:10px 0 14px}
+.traveler-rating-summary{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 14px;border:1px solid #d8e7eb;border-radius:12px;background:#f7fbfc;color:#173f52}
+.traveler-rating-summary>div{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.traveler-summary-stars{font-size:18px;letter-spacing:1px;color:#e6a000;line-height:1}
+.traveler-rating-summary strong{font-size:15px;color:#0b3447}
+.traveler-rating-summary>span{font-size:11px;font-weight:700;color:#607b88}
+.traveler-rating-summary.empty{align-items:flex-start;flex-direction:column;gap:3px}
+@media(max-width:700px){.traveler-rating-summary{align-items:flex-start;flex-direction:column;gap:5px}}
+
+/* Simplified traveler report form on airline pages */
+.traveler-form-simple .traveler-optional{border:1px solid #d7e5ea;border-radius:10px;background:#f9fcfd;padding:0;overflow:hidden}
+.traveler-form-simple .traveler-optional summary{cursor:pointer;padding:12px 14px;font-size:12px;font-weight:800;color:#0b5f7a;list-style:none}
+.traveler-form-simple .traveler-optional summary::-webkit-details-marker{display:none}
+.traveler-form-simple .traveler-optional summary::after{content:' +';float:right;font-size:16px;line-height:1}
+.traveler-form-simple .traveler-optional[open] summary::after{content:' −'}
+.traveler-form-simple .traveler-optional-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 14px 14px}
+@media(max-width:760px){.traveler-form-simple .traveler-optional-grid{grid-template-columns:1fr}}
+
+/* Fix optional traveler details expansion: span the full form width */
+.traveler-form-simple .traveler-optional.wide{
+  grid-column:1 / -1;
+  width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+.traveler-form-simple .traveler-optional-grid{
+  width:100%;
+  box-sizing:border-box;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+.traveler-form-simple .traveler-optional-grid .traveler-field{
+  min-width:0;
+}
+@media(max-width:600px){
+  .traveler-form-simple .traveler-optional.wide{grid-column:auto}
+  .traveler-form-simple .traveler-optional-grid{grid-template-columns:1fr}
+}

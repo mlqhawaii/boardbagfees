@@ -1,0 +1,128 @@
+{
+  "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin-allow-popups"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/snowboard-bag-fees",
+      "destination": "/snowboard-bag-fees.html"
+    },
+    {
+      "source": "/ski-bag-fees",
+      "destination": "/ski-bag-fees.html"
+    },
+    {
+      "source": "/kiteboard-bag-fees",
+      "destination": "/kiteboard-bag-fees.html"
+    },
+    {
+      "source": "/wakeboard-bag-fees",
+      "destination": "/wakeboard-bag-fees.html"
+    },
+    {
+      "source": "/sporting-equipment",
+      "destination": "/sporting-equipment.html"
+    },
+    {
+      "source": "/baggage-handling",
+      "destination": "/baggage-handling.html"
+    },
+    {
+      "source": "/best-airlines-for-surfboards",
+      "destination": "/best-airlines-for-surfboards.html"
+    },
+    {
+      "source": "/airlines-surfboards-free",
+      "destination": "/airlines-surfboards-free.html"
+    },
+    {
+      "source": "/surfboard-bag-fees-comparison",
+      "destination": "/surfboard-bag-fees-comparison.html"
+    },
+    {
+      "source": "/surfboard-fees-bali",
+      "destination": "/surfboard-fees-bali.html"
+    },
+    {
+      "source": "/surfboard-fees-costa-rica",
+      "destination": "/surfboard-fees-costa-rica.html"
+    },
+    {
+      "source": "/surfboard-fees-portugal",
+      "destination": "/surfboard-fees-portugal.html"
+    }
+  ],
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/airlines/qatar-airways.html",
+      "destination": "/airlines/qatar-airways",
+      "permanent": true
+    },
+    {
+      "source": "/airlines/korean-air.html",
+      "destination": "/airlines/korean-air",
+      "permanent": true
+    },
+    {
+      "source": "/airlines/ana.html",
+      "destination": "/airlines/ana",
+      "permanent": true
+    },
+    {
+      "source": "/airlines/delta.html",
+      "destination": "/airlines/delta",
+      "permanent": true
+    },
+    {
+      "source": "/airlines/japan-airlines-jal.html",
+      "destination": "/airlines/japan-airlines-jal",
+      "permanent": true
+    },
+    {
+      "source": "/airlines/alaska-airlines.html",
+      "destination": "/airlines/alaska-airlines",
+      "permanent": true
+    },
+    {
+      "source": "/airlines/american-airlines.html",
+      "destination": "/airlines/american-airlines",
+      "permanent": true
+    },
+    {
+      "source": "/airlines/hawaiian-airlines.html",
+      "destination": "/airlines/hawaiian-airlines",
+      "permanent": true
+    },
+    {
+      "source": "/airlines/united.html",
+      "destination": "/airlines/united",
+      "permanent": true
+    }
+  ]
+}

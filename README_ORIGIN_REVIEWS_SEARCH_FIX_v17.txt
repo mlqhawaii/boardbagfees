@@ -1,0 +1,1 @@
+v17 fixes the malformed global search on guide/origin pages by adding the missing search CSS to guide-pages.css. It also adds approved traveler rating summaries to all origin-page matrices via /api/reviews?stats=1, linking to each airline review section.

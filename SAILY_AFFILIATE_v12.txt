@@ -1,0 +1,5 @@
+Saily affiliate integration v12
+Tracking link: https://go.saily.site/aff_c?offer_id=101&aff_id=16126
+Placements: homepage Surf Travel Essentials + Bali, Costa Rica, Portugal destination guides.
+Uses Saily official logo asset hosted on Saily/Nord CDN.
+Affiliate links marked sponsored/nofollow/noopener.

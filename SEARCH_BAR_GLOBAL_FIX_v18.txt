@@ -1,0 +1,1 @@
+v18 adds one shared /global-search.css stylesheet to every HTML page that contains the global airline search form. This prevents page-specific CSS (especially airline detail pages) from rendering the search SVG as a large black circle. 92 search-enabled pages were audited and linked to the shared stylesheet.

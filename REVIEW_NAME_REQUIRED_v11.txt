@@ -1,0 +1,8 @@
+BoardBagFees v11
+
+Traveler review name requirement:
+- Name is required on homepage traveler form.
+- Name is required on all airline detail traveler forms.
+- Server API rejects blank names, so the requirement cannot be bypassed by skipping browser validation.
+- Existing anonymous reviews remain unchanged.
+- Suggested format: first name or first name + last initial.

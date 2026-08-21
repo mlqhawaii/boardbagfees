@@ -1,0 +1,16 @@
+# BoardBagFees crawler policy
+# Search engines may index public pages. Private/API routes are excluded.
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+
+# Opt out of OpenAI model-training crawler while leaving user-initiated browsing/search separate.
+User-agent: GPTBot
+Disallow: /
+
+# Opt out of Google's extended AI-use crawler; Google Search crawling remains governed by Googlebot.
+User-agent: Google-Extended
+Disallow: /
+
+Sitemap: https://www.boardbagfees.com/sitemap.xml

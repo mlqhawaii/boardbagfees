@@ -1,0 +1,18 @@
+/* Unified BoardBagFees header — v23 */
+.unified-site-header.site-header{
+  height:68px!important; min-height:68px!important; display:flex!important; align-items:center!important;
+  gap:28px!important; padding:0 clamp(18px,4vw,56px)!important; background:#fff!important;
+  border:0!important; border-bottom:1px solid #e7edf2!important; box-shadow:0 2px 14px rgba(5,38,66,.03)!important;
+  position:sticky!important; top:0!important; z-index:100!important; box-sizing:border-box!important;
+  font-family:"DM Sans",Arial,sans-serif!important;
+}
+.unified-site-header .unified-brand{width:170px!important;height:54px!important;display:flex!important;align-items:center!important;flex:0 0 170px!important;margin-right:auto!important;background:none!important;text-decoration:none!important}
+.unified-site-header .unified-brand img{display:block!important;width:142px!important;height:auto!important;max-height:52px!important;object-fit:contain!important}
+.unified-site-header nav{display:flex!important;align-items:center!important;gap:30px!important;margin:0!important;padding:0!important}
+.unified-site-header nav a{font-family:"DM Sans",Arial,sans-serif!important;font-size:13px!important;line-height:1!important;font-weight:700!important;color:#092e4c!important;text-decoration:none!important;white-space:nowrap!important;background:none!important;border:0!important;padding:0!important;box-shadow:none!important}
+.unified-site-header nav a:hover{color:#0b6b86!important}
+.unified-site-header nav a.nav-support{display:inline-flex!important;align-items:center!important;padding:8px 12px!important;border:1px solid #c9dde4!important;border-radius:999px!important;background:#f4fafb!important;color:#0b5f7a!important;font-weight:800!important;box-shadow:0 2px 8px rgba(8,68,88,.04)!important}
+.unified-site-header nav a.nav-support:hover{background:#e9f6f8!important;border-color:#a9d1da!important;color:#07506b!important}
+@media(max-width:1180px){.unified-site-header.site-header{gap:16px!important}.unified-site-header nav{gap:15px!important}.unified-site-header .unified-brand{width:150px!important;flex-basis:150px!important}.unified-site-header .unified-brand img{width:132px!important}}
+@media(max-width:980px){.unified-site-header nav{display:none!important}.unified-site-header.site-header{padding:0 18px!important}.unified-site-header .unified-brand{width:145px!important;flex-basis:145px!important}}
+@media(max-width:620px){.unified-site-header.site-header{height:62px!important;min-height:62px!important;padding:0 12px!important;gap:8px!important}.unified-site-header .unified-brand{width:118px!important;flex-basis:118px!important;height:46px!important}.unified-site-header .unified-brand img{width:112px!important}.unified-site-header .global-airline-search{margin-left:auto!important}}

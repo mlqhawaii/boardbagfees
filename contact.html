@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Contact | Board Bag Fees</title>
+  <meta name="description" content="Contact Board Bag Fees with airline policy corrections, partnership inquiries, feedback or surf travel questions.">
+  <link rel="canonical" href="https://www.boardbagfees.com/contact">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/global-search.css">
+  <link rel="stylesheet" href="/unified-header.css">
+</head>
+<body class="contact-page">
+  <header class="site-header unified-site-header">
+  <a class="brand unified-brand" href="/" aria-label="BoardBagFees home"><img src="/assets/boardbagfees-logo.png" alt="Board Bag Fees"></a>
+  <nav aria-label="Main navigation"><a href="/#airline-comparison">Airlines</a><a href="/#airline-comparison">Compare</a><a href="/#traveler-reports">Traveler reports</a><a href="/#travel-note">Tips</a><a href="/#how-it-works">About</a><a href="/#travel-note">Blog</a><a href="/contact">Contact</a><a class="nav-support" href="/#support-title" aria-label="Support the site">Support the site</a></nav>
+  <form class="global-airline-search" role="search" aria-label="Search airlines">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.35-4.35m2.35-5.65a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z"/></svg>
+    <input class="global-airline-search-input" type="search" placeholder="Search airline…" autocomplete="off" aria-label="Search an airline" />
+    <div class="global-airline-results" hidden></div>
+  </form>
+</header>
+  <main class="contact-shell">
+    <section class="contact-panel">
+      <div class="eyebrow">GET IN TOUCH</div><h1>Contact Board Bag Fees</h1>
+      <p class="contact-intro">Found an airline policy that needs updating? Have a firsthand surfboard experience, partnership idea or site suggestion? Send a message below.</p>
+      <form id="contact-form" class="contact-form">
+        <div class="contact-grid">
+          <label>Name<input type="text" name="name" maxlength="120" placeholder="Your name"></label>
+          <label>Email *<input type="email" name="email" maxlength="254" required placeholder="you@example.com"></label>
+        </div>
+        <label>Subject<select name="subject"><option value="">Choose a topic...</option><option>Airline policy correction</option><option>Traveler report question</option><option>Partnership / advertising</option><option>Website feedback</option><option>Other</option></select></label>
+        <label>Message *<textarea name="message" maxlength="5000" required placeholder="How can we help?"></textarea></label>
+        <div class="contact-actions"><button type="submit" id="contact-submit">Send message</button><span id="contact-status" aria-live="polite"></span></div>
+      </form>
+      <p class="contact-privacy">Your information is used only to respond to your message. See our <a href="/privacy">Privacy Policy</a>.</p>
+    </section>
+  </main>
+<script>
+const form=document.getElementById('contact-form'),statusEl=document.getElementById('contact-status'),button=document.getElementById('contact-submit');
+form.addEventListener('submit',async(e)=>{e.preventDefault();button.disabled=true;statusEl.textContent='Sending...';statusEl.className='';const data=Object.fromEntries(new FormData(form).entries());try{const response=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const result=await response.json();if(!response.ok)throw new Error(result.error||'Unable to send message.');form.reset();statusEl.textContent='Thanks — your message was sent.';statusEl.className='contact-success'}catch(error){statusEl.textContent=error.message;statusEl.className='contact-error'}finally{button.disabled=false}});
+</script>
+  <script src="/global-airline-search.js" defer></script>
+</body></html>

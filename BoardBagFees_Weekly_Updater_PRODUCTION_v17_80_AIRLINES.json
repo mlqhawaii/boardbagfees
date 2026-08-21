@@ -1,0 +1,509 @@
+{
+  "name": "BoardBagFees Weekly Updater - 80 Airlines",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "4babb2d1-e500-4f9f-8bc5-8d960ebc2b01",
+      "name": "Manual Test",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -980,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 6 * * 1"
+            }
+          ]
+        }
+      },
+      "id": "9bf2cc29-ae50-40ce-a4cb-1fa98f13fa5b",
+      "name": "Every Monday 6 AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -980,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5bd3b536-adc0-455c-9183-ec616d6d87f1",
+              "name": "supabaseUrl",
+              "value": "https://twooldhqmejmtxsgrgbb.supabase.co",
+              "type": "string"
+            },
+            {
+              "id": "6eeb905d-dcd8-47e3-93de-ca13a960715c",
+              "name": "supabaseSecretKey",
+              "value": "PASTE_SUPABASE_SECRET_KEY_HERE",
+              "type": "string"
+            },
+            {
+              "id": "13d638a1-df42-4798-ab5d-d462f7590fe3",
+              "name": "apifyToken",
+              "value": "PASTE_APIFY_TOKEN_HERE",
+              "type": "string"
+            },
+            {
+              "id": "535b9fab-43b9-4e15-bfa5-c6e9da8d61b6",
+              "name": "geminiApiKey",
+              "value": "PASTE_GEMINI_API_KEY_HERE",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cbc2d449-6e02-40c4-880c-2c48972207f6",
+      "name": "CONFIG - PASTE 3 KEYS HERE",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -740,
+        20
+      ],
+      "notesInFlow": true,
+      "notes": "Paste Supabase SECRET key, Apify token, and Gemini API key here."
+    },
+    {
+      "parameters": {
+        "url": "={{ $(\"CONFIG - PASTE 3 KEYS HERE\").first().json.supabaseUrl + '/rest/v1/airline_surf_policies?select=*&active=eq.true&order=sort_rank.asc' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $(\"CONFIG - PASTE 3 KEYS HERE\").first().json.supabaseSecretKey }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f6092721-447f-43bb-a1c5-c889f11d5f35",
+      "name": "Get Up To 80 Active Airlines",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -500,
+        20
+      ],
+      "notes": "v9 FIX: Uses Supabase sb_secret only in apikey header; no Authorization Bearer header. v10: Retry Supabase transient auth/JWT timing errors up to 5 times with 3-second delay.",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 3000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/actors/apify~ai-web-scraper/runs?memory=4096&maxItems=80&maxTotalChargeUsd=5",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $(\"CONFIG - PASTE 3 KEYS HERE\").first().json.apifyToken }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  startUrls: $(\"Get Up To 80 Active Airlines\").all().map(item => ({ url: item.json.policy_url })),\n  extractionMode: \"single\",\n  prompt: \"\"\n} }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "466d57fa-a2b8-485a-a254-126b31aca1f4",
+      "name": "Start ONE Apify Markdown Batch - Up To 80 URLs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -240,
+        20
+      ],
+      "executeOnce": true,
+      "notesInFlow": true,
+      "notes": "v12: Apify is intentionally used only to fetch clean Markdown from each official airline policy URL. v16: batch cap increased from 32 to 80 URLs; maxTotalChargeUsd remains $5."
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "seconds"
+      },
+      "id": "faaaf8e6-77fa-4167-a6e6-203b40bf4a2f",
+      "name": "Wait 30 Seconds",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        20,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ 'https://api.apify.com/v2/actor-runs/' + $(\"Start ONE Apify Markdown Batch - Up To 80 URLs\").first().json.data.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $(\"CONFIG - PASTE 3 KEYS HERE\").first().json.apifyToken }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "22202c79-af28-4166-80f0-ff7ad457eafb",
+      "name": "Check Apify Batch Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        280,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f1bc7b78-6e8e-48bf-a724-43fbe1867341",
+              "leftValue": "={{ $json.data.status }}",
+              "rightValue": "SUCCEEDED",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "aa394f48-e757-475a-9b1f-c6b121e395e5",
+      "name": "Apify Finished?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        540,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ 'https://api.apify.com/v2/datasets/' + $(\"Start ONE Apify Markdown Batch - Up To 80 URLs\").first().json.data.defaultDatasetId + '/items?clean=true&format=json' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $(\"CONFIG - PASTE 3 KEYS HERE\").first().json.apifyToken }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5b79a943-7507-466f-84a5-d99f98d16f9f",
+      "name": "Get All Apify Results",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        -80
+      ],
+      "notes": "Returns one item per successfully scraped page, with url + markdown."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $(\"CONFIG - PASTE 3 KEYS HERE\").first().json.supabaseUrl + '/rest/v1/rpc/process_airline_policy_extraction' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $(\"CONFIG - PASTE 3 KEYS HERE\").first().json.supabaseSecretKey }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ (() => {\n  const text = $json.candidates?.[0]?.content?.parts?.[0]?.text ?? '{}';\n  let d = {};\n  try { d = JSON.parse(text); } catch (e) { d = {}; }\n\n  const source = $(\"Get All Apify Results\").item.json;\n  const confidenceRaw = Number(d.confidence);\n  const scoreRaw = Number(d.surf_rating_score);\n\n  return {\n    p_policy_url: source.url ?? '',\n    p_airline: d.airline_name ?? null,\n    p_facts: {\n      has_surfboard_policy: d.has_surfboard_policy === true,\n      baggage_treatment: d.baggage_treatment ?? 'unclear',\n      fee_text: d.fee_text ?? null,\n      max_length_text: d.max_length_text ?? null,\n      max_weight_text: d.max_weight_text ?? null,\n      boards_per_bag_text: d.boards_per_bag_text ?? null,\n      route_restrictions: d.route_restrictions ?? 'none stated',\n      other_conditions: d.other_conditions ?? 'none stated'\n    },\n    p_confidence: Number.isFinite(confidenceRaw) ? Math.max(0, Math.min(1, confidenceRaw)) : 0,\n    p_surfboard_treatment: d.surfboard_treatment ?? null,\n    p_size_rule: d.size_rule ?? null,\n    p_surf_rating_score: Number.isFinite(scoreRaw) ? Math.max(0, Math.min(5, Math.round(scoreRaw))) : null,\n    p_surf_rating: d.surf_rating ?? null,\n    p_notes: d.notes ?? 'Gemini returned no valid structured extraction.'\n  };\n})() }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "15f33a91-fbea-495f-b086-af4090da3518",
+      "name": "Update Supabase - Each Result",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1500,
+        -80
+      ],
+      "notes": "v12: Receives structured JSON from Gemini and sends it to the existing Supabase comparison/safety function.",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 3000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-goog-api-key",
+              "value": "={{ $(\"CONFIG - PASTE 3 KEYS HERE\").first().json.geminiApiKey }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  contents: [{\n    role: \"user\",\n    parts: [{\n      text: `Extract the surfboard / surfing-equipment baggage policy from the airline page text below.\n\nUse ONLY the supplied page text. Do not search the web. Do not invent missing facts.\n\nConfidence measures how clearly the supplied page states the surfboard policy:\n- 0.95\u20131.00: explicit and unambiguous\n- 0.90\u20130.94: clear with minor ambiguity\n- below 0.90: incomplete, unclear, conflicting, or not actually a surfboard policy\n\nFor surf_rating_score:\n5 = exceptionally surf-friendly\n4 = very good\n3 = acceptable/moderate\n2 = inconvenient/restrictive\n1 = expensive/restrictive\n0 = boards not accepted / exceptionally bad\n\nPAGE URL:\n${$json.url}\n\nPAGE TEXT:\n${$json.markdown}`\n    }]\n  }],\n  generationConfig: {\n    responseMimeType: \"application/json\",\n    responseJsonSchema: {\n      type: \"object\",\n      properties: {\n        airline_name: { type: [\"string\", \"null\"] },\n        has_surfboard_policy: { type: \"boolean\" },\n        baggage_treatment: {\n          type: \"string\",\n          enum: [\"included\", \"normal_checked_bag\", \"special_fee\", \"not_accepted\", \"conditional\", \"unclear\"]\n        },\n        fee_text: { type: [\"string\", \"null\"] },\n        max_length_text: { type: [\"string\", \"null\"] },\n        max_weight_text: { type: [\"string\", \"null\"] },\n        boards_per_bag_text: { type: [\"string\", \"null\"] },\n        route_restrictions: { type: \"string\" },\n        other_conditions: { type: \"string\" },\n        surfboard_treatment: { type: [\"string\", \"null\"] },\n        size_rule: { type: [\"string\", \"null\"] },\n        surf_rating_score: {\n          type: [\"integer\", \"null\"],\n          minimum: 0,\n          maximum: 5\n        },\n        surf_rating: {\n          type: [\"string\", \"null\"],\n          enum: [\"Excellent\", \"Very good\", \"Good\", \"Okay\", \"Bad\", \"Terrible\", null]\n        },\n        confidence: {\n          type: \"number\",\n          minimum: 0,\n          maximum: 1\n        },\n        notes: { type: \"string\" }\n      },\n      required: [\n        \"airline_name\",\n        \"has_surfboard_policy\",\n        \"baggage_treatment\",\n        \"fee_text\",\n        \"max_length_text\",\n        \"max_weight_text\",\n        \"boards_per_bag_text\",\n        \"route_restrictions\",\n        \"other_conditions\",\n        \"surfboard_treatment\",\n        \"size_rule\",\n        \"surf_rating_score\",\n        \"surf_rating\",\n        \"confidence\",\n        \"notes\"\n      ],\n      additionalProperties: false\n    }\n  }\n} }}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "b0f0d05e-a2d3-4828-ad08-79117e9cd305",
+      "name": "Gemini - Extract Structured Policy",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1240,
+        -80
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 10000,
+      "notesInFlow": true,
+      "notes": "v15: Current Gemini model + structured JSON. Serialized to one page at a time; automatic retries wait 10 seconds for transient 429/5xx errors."
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "8ce88575-34c2-4cb1-8c57-e566fef3d46f",
+      "name": "Process Gemini One at a Time",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        980,
+        -80
+      ],
+      "notesInFlow": true,
+      "notes": "Processes one scraped airline page at a time so Gemini free-tier RPM is not exceeded."
+    },
+    {
+      "parameters": {
+        "amount": 6,
+        "unit": "seconds"
+      },
+      "id": "70a995f0-f0e3-4e74-9c32-3598856f3482",
+      "name": "Gemini Rate Limit Pause",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1760,
+        -80
+      ],
+      "notesInFlow": true,
+      "notes": "6-second pause = at most about 10 Gemini requests/minute, below the current 15 RPM free-tier limit shown by the API."
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Manual Test": {
+      "main": [
+        [
+          {
+            "node": "CONFIG - PASTE 3 KEYS HERE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Every Monday 6 AM": {
+      "main": [
+        [
+          {
+            "node": "CONFIG - PASTE 3 KEYS HERE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 30 Seconds": {
+      "main": [
+        [
+          {
+            "node": "Check Apify Batch Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Apify Batch Status": {
+      "main": [
+        [
+          {
+            "node": "Apify Finished?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apify Finished?": {
+      "main": [
+        [
+          {
+            "node": "Get All Apify Results",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait 30 Seconds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CONFIG - PASTE 3 KEYS HERE": {
+      "main": [
+        [
+          {
+            "node": "Get Up To 80 Active Airlines",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini - Extract Structured Policy": {
+      "main": [
+        [
+          {
+            "node": "Update Supabase - Each Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Gemini One at a Time": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Gemini - Extract Structured Policy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Supabase - Each Result": {
+      "main": [
+        [
+          {
+            "node": "Gemini Rate Limit Pause",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Rate Limit Pause": {
+      "main": [
+        [
+          {
+            "node": "Process Gemini One at a Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Up To 80 Active Airlines": {
+      "main": [
+        [
+          {
+            "node": "Start ONE Apify Markdown Batch - Up To 80 URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Apify Results": {
+      "main": [
+        [
+          {
+            "node": "Process Gemini One at a Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start ONE Apify Markdown Batch - Up To 80 URLs": {
+      "main": [
+        [
+          {
+            "node": "Wait 30 Seconds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Pacific/Honolulu",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true
+  },
+  "versionId": "1a2629c1-6fee-4642-b464-68200f197feb",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

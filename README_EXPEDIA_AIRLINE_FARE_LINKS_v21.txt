@@ -1,0 +1,1 @@
+v21: Added a subtle “Compare fares” CTA to every airline detail page via airline-page.js. The CTA links to the tracked Expedia flight-search section on the BoardBagFees homepage (#compare-flights), keeping the 80-airline comparison matrix editorial and uncluttered.

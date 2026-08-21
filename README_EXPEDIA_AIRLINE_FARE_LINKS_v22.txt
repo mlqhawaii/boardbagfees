@@ -1,0 +1,1 @@
+v22: Moved the Compare fares CTA into the sixth card of each airline detail-page facts grid, directly below the Size / rule column on desktop. The CTA links to the tracked Expedia flight-search section on the homepage (#compare-flights).

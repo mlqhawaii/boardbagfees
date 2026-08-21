@@ -1,0 +1,89 @@
+/* BoardBagFees global airline search — shared by every page type. */
+.global-airline-search{
+  position:relative!important;
+  width:clamp(180px,18vw,270px)!important;
+  height:38px!important;
+  min-width:180px!important;
+  max-width:270px!important;
+  margin:0!important;
+  padding:0 12px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:7px!important;
+  flex:0 0 auto!important;
+  box-sizing:border-box!important;
+  border:1px solid #d5e2e8!important;
+  border-radius:999px!important;
+  background:#fff!important;
+  box-shadow:0 3px 12px rgba(6,43,77,.05)!important;
+  overflow:visible!important;
+}
+.global-airline-search:focus-within{
+  border-color:#7eb5c4!important;
+  box-shadow:0 0 0 3px rgba(28,130,157,.10)!important;
+}
+.global-airline-search>svg{
+  display:block!important;
+  width:16px!important;
+  height:16px!important;
+  min-width:16px!important;
+  max-width:16px!important;
+  min-height:16px!important;
+  max-height:16px!important;
+  flex:0 0 16px!important;
+  overflow:visible!important;
+  fill:none!important;
+  stroke:#547485!important;
+  stroke-width:2!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+.global-airline-search>svg path{
+  fill:none!important;
+  stroke:#547485!important;
+}
+.global-airline-search-input{
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  width:100%!important;
+  min-width:0!important;
+  height:auto!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  outline:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#0b3447!important;
+  font-family:"DM Sans",Arial,sans-serif!important;
+  font-size:12px!important;
+  font-weight:600!important;
+  line-height:1.2!important;
+}
+.global-airline-search-input::-webkit-search-decoration,
+.global-airline-search-input::-webkit-search-cancel-button,
+.global-airline-search-input::-webkit-search-results-button,
+.global-airline-search-input::-webkit-search-results-decoration{-webkit-appearance:none!important}
+.global-airline-search-input::placeholder{color:#718893!important;font-weight:500!important;opacity:1!important}
+.global-airline-results{
+  position:absolute!important;
+  z-index:1000!important;
+  top:calc(100% + 8px)!important;
+  left:0!important;
+  right:0!important;
+  max-height:360px!important;
+  overflow:auto!important;
+  border:1px solid #d5e2e8!important;
+  border-radius:12px!important;
+  background:#fff!important;
+  box-shadow:0 16px 38px rgba(6,43,77,.16)!important;
+}
+.global-airline-results[hidden]{display:none!important}
+@media(max-width:1180px){.global-airline-search{width:185px!important;min-width:165px!important}}
+@media(max-width:900px){.global-airline-search{margin-left:auto!important;width:min(240px,42vw)!important;min-width:150px!important}}
+@media(max-width:620px){.global-airline-search{width:min(200px,50vw)!important;min-width:135px!important;height:36px!important;padding:0 10px!important}.global-airline-search-input{font-size:11px!important}}

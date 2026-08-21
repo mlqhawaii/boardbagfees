@@ -1,0 +1,1 @@
+Origin matrices now derive the text rating label from the numeric surf rating whenever the label field is blank, keeping the light indicators and text consistent.
