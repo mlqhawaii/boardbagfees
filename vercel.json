@@ -77,52 +77,5 @@
       "destination": "/surfboard-fees-portugal.html"
     }
   ],
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "redirects": [
-    {
-      "source": "/airlines/qatar-airways.html",
-      "destination": "/airlines/qatar-airways",
-      "permanent": true
-    },
-    {
-      "source": "/airlines/korean-air.html",
-      "destination": "/airlines/korean-air",
-      "permanent": true
-    },
-    {
-      "source": "/airlines/ana.html",
-      "destination": "/airlines/ana",
-      "permanent": true
-    },
-    {
-      "source": "/airlines/delta.html",
-      "destination": "/airlines/delta",
-      "permanent": true
-    },
-    {
-      "source": "/airlines/japan-airlines-jal.html",
-      "destination": "/airlines/japan-airlines-jal",
-      "permanent": true
-    },
-    {
-      "source": "/airlines/alaska-airlines.html",
-      "destination": "/airlines/alaska-airlines",
-      "permanent": true
-    },
-    {
-      "source": "/airlines/american-airlines.html",
-      "destination": "/airlines/american-airlines",
-      "permanent": true
-    },
-    {
-      "source": "/airlines/hawaiian-airlines.html",
-      "destination": "/airlines/hawaiian-airlines",
-      "permanent": true
-    },
-    {
-      "source": "/airlines/united.html",
-      "destination": "/airlines/united",
-      "permanent": true
-    }
-  ]
+  "$schema": "https://openapi.vercel.sh/vercel.json"
 }
