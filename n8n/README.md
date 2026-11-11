@@ -12,3 +12,22 @@ Next steps:
 5. Establish reviewed deployment to local n8n, with backup and rollback.
 
 Changes to live n8n workflows are not authorized or performed by this README.
+
+## BoardBagFees Rotating 20 evidence checks
+
+Export the current Rotating 20 workflow from n8n. In a private local directory, run:
+
+```sh
+node n8n/patch-boardbagfees-qc.mjs < workflow-export.json > workflow-reviewed.json
+```
+
+Both exports may contain credentials. Keep them out of Git. Apply the generated
+Gemini and Supabase node parameters to the existing workflow, along with the
+Apify status node retry settings. Preserve the current workflow ID and publish
+the edited version so the existing schedule uses it.
+
+The extraction must cite text from the scraped airline page. The updater
+preserves current values when evidence is absent or fails the field checks.
+The existing Supabase QC endpoint still decides whether to apply or hold the
+result. After a manual run, check the Supabase update node for applied and held
+results before relying on the next scheduled run.
