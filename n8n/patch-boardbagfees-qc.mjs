@@ -24,7 +24,7 @@ if (!original.includes('PAGE URL:') || !original.includes('additionalProperties:
 }
 gemini.parameters.jsonBody = original
   .replace('PAGE URL:', prompt + '\n\nPAGE URL:')
-  .replace('properties: {', `properties: { evidence: { type: "object", properties: ${JSON.stringify(evidenceProperties)}, required: ${JSON.stringify(fields)}, additionalProperties: false },`)
+  .replace('properties: {', `properties: { evidence: { type: "object", properties: ${JSON.stringify(evidenceProperties, null, 2)}, required: ${JSON.stringify(fields)}, additionalProperties: false },`)
   .replace('required: [\n', 'required: [\n        "evidence",\n');
 
 const review = readFileSync(new URL('./review-boardbagfees-policy.js', import.meta.url), 'utf8');
