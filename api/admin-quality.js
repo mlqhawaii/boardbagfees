@@ -4,6 +4,44 @@ const clean = (v, max = 2000) => String(v ?? '').trim().slice(0, max);
 function safeEqual(a,b){const aa=Buffer.from(String(a||'')),bb=Buffer.from(String(b||''));if(aa.length!==bb.length)return false;return crypto.timingSafeEqual(aa,bb)}
 function authorized(req){const expected=process.env.BOARDBAGFEES_ADMIN_PASSWORD;if(!expected)return false;const auth=String(req.headers.authorization||'');const supplied=auth.startsWith('Bearer ')?auth.slice(7):String(req.headers['x-admin-password']||'');return safeEqual(supplied,expected)}
 
+const ratings = ['Terrible', 'Bad', 'Okay', 'Good', 'Very good', 'Excellent'];
+const treatmentScores = {
+  not_accepted: 0,
+  special_fee: 2,
+  conditional: 3,
+  normal_checked_bag: 4,
+  free_additional_allowance: 5
+};
+
+function reviewedPayload(row, fields) {
+  const proposal = row.proposed_payload;
+  const current = row.old_snapshot || {};
+  const currentFacts = current.policy_facts || {};
+  const facts = { ...currentFacts };
+  const fee = clean(fields.fee, 2000);
+  if (fee !== clean(currentFacts.fee_text, 2000)) facts.fee_text = fee;
+  const treatment = clean(fields.treatment, 200);
+  if (treatment !== clean(currentFacts.baggage_treatment, 200)) {
+    if (!Object.hasOwn(treatmentScores, treatment)) throw new Error('Choose a valid baggage treatment.');
+    facts.baggage_treatment = treatment;
+    facts.has_surfboard_policy = true;
+  }
+  const oldScore = current.surf_rating_score;
+  const score = treatment === clean(currentFacts.baggage_treatment, 200)
+    && Number.isInteger(oldScore) && ratings[oldScore]
+    ? oldScore
+    : Object.hasOwn(treatmentScores, treatment) ? treatmentScores[treatment] : null;
+  return {
+    ...proposal,
+    p_facts: facts,
+    p_surfboard_treatment: clean(fields.summary) || null,
+    p_size_rule: clean(fields.size) || null,
+    p_surf_rating_score: score,
+    p_surf_rating: score === null ? null : ratings[score],
+    p_notes: current.agent_notes ?? null
+  };
+}
+
 export default async function handler(req,res){
   res.setHeader('Cache-Control','no-store');res.setHeader('X-Robots-Tag','noindex, nofollow');
   if(!authorized(req)) return res.status(401).json({error:'Unauthorized'});
@@ -31,7 +69,31 @@ export default async function handler(req,res){
       const row=JSON.parse(raw||'[]')[0];if(!row)return res.status(404).json({error:'QC item not found.'});
       if(row.status!=='pending')return res.status(409).json({error:'This QC item is no longer pending.'});
       if(action==='approve'){
-        const payload=row.proposed_payload||{};
+        const fields = body.fields;
+        if (!fields || !['fee', 'treatment', 'summary', 'size'].every(field => typeof fields[field] === 'string')) {
+          return res.status(400).json({error:'Review each policy field before applying changes.'});
+        }
+        let payload;
+        try {
+          const current = await fetch(
+            `${url}/rest/v1/airline_surf_policies?policy_url=eq.${encodeURIComponent(row.policy_url)}&select=policy_facts,surfboard_treatment,size_rule,surf_rating_score,surf_rating,agent_notes&limit=1`,
+            {headers}
+          );
+          if (!current.ok) return res.status(current.status).json({error:'Unable to verify the current policy.'});
+          const [live] = await current.json();
+          if (!live) return res.status(409).json({error:'The current policy could not be found.'});
+          const snapshot = row.old_snapshot || {};
+          const fieldsChanged = ['surfboard_treatment', 'size_rule', 'surf_rating_score', 'surf_rating']
+            .some(field => (live[field] ?? null) !== (snapshot[field] ?? null));
+          const factsChanged = ['fee_text', 'baggage_treatment']
+            .some(field => (live.policy_facts?.[field] ?? null) !== (snapshot.policy_facts?.[field] ?? null));
+          if (fieldsChanged || factsChanged) {
+            return res.status(409).json({error:'The live policy changed after this proposal was queued. Review the latest policy before applying changes.'});
+          }
+          payload = reviewedPayload({...row, old_snapshot:live}, fields);
+        } catch (error) {
+          return res.status(400).json({error:error.message});
+        }
         const apply=await fetch(`${url}/rest/v1/rpc/process_airline_policy_extraction_unchecked`,{method:'POST',headers,body:JSON.stringify(payload)});
         const applyText=await apply.text();
         if(!apply.ok)return res.status(apply.status).json({error:'Unable to apply proposed policy update',detail:applyText});
