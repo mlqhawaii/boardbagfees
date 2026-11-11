@@ -31,8 +31,12 @@ const review = readFileSync(new URL('./review-boardbagfees-policy.js', import.me
 update.parameters.jsonBody = `={{ (() => {
 ${review}
 const result = $("Get All Apify Results").item.json;
-const current = $("Get 20 Stalest Active Airlines").all().map(item => item.json)
-  .find(row => String(row.policy_url ?? '').trim() === String(result.url ?? '').trim());
+const selected = $("Get 20 Stalest Active Airlines").all().map(item => item.json);
+const resultUrl = String(result.url ?? '').trim();
+const exact = selected.find(row => String(row.policy_url ?? '').trim() === resultUrl);
+const host = url => String(url ?? '').split('/')[2]?.toLowerCase().replace(/^www[.]/, '');
+const sameHost = selected.filter(row => host(resultUrl) && host(row.policy_url) === host(resultUrl));
+const current = exact || (sameHost.length === 1 ? sameHost[0] : null);
 if (!current) throw new Error('Scraped URL did not match a selected airline policy.');
 let extraction;
 try {
@@ -40,7 +44,7 @@ try {
 } catch (error) {
   extraction = {};
 }
-return reviewBoardBagFeesPolicy(extraction || {}, current, result.markdown);
+return reviewBoardBagFeesPolicy(exact ? (extraction || {}) : {}, current, result.markdown);
 })() }}`;
 
 const status = node('Check Apify Batch Status');
