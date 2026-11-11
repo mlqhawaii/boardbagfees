@@ -165,11 +165,11 @@ async function loadAirlines(){
           const parsed=new Date(us.last_success_at);
           const pretty=Number.isNaN(parsed.getTime()) ? String(us.last_success_at).slice(0,10) : parsed.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric',timeZone:'Pacific/Honolulu'});
           const footerChecked=document.querySelector('#checked');
-          if(footerChecked) footerChecked.textContent=`Policy data last checked ${pretty}`;
+          if(footerChecked) footerChecked.textContent=`Latest airline policy check: ${pretty}`;
           const topChecked=document.querySelector('#lastUpdatedLabel');
-          if(topChecked) topChecked.textContent=`Last policy check: ${pretty}`;
+          if(topChecked) topChecked.textContent=`Latest airline policy check: ${pretty}`;
           const heroChecked=document.querySelector('#heroLastUpdated');
-          if(heroChecked) heroChecked.textContent=`Policy data checked ${pretty}`;
+          if(heroChecked) heroChecked.textContent=`Latest airline policy check: ${pretty}`;
         }
       }
     }catch{}
