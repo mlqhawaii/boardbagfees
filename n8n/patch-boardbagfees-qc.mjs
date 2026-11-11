@@ -37,7 +37,7 @@ if (!current) throw new Error('Scraped URL did not match a selected airline poli
 let extraction;
 try {
   extraction = JSON.parse($json.candidates?.[0]?.content?.parts?.[0]?.text ?? '{}');
-} catch {
+} catch (error) {
   extraction = {};
 }
 return reviewBoardBagFeesPolicy(extraction || {}, current, result.markdown);
