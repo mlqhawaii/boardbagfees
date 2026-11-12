@@ -43,9 +43,11 @@ for (const name of filenames) {
   if (!a) {missing.push(slug); continue;}
   const file=path.join(folder,name);
   let html=await readFile(file,'utf8');
-  html=fill(html,'fee',fee(a));
-  html=fill(html,'treatment',a.surfboard_treatment);
-  html=fill(html,'size',a.size_rule);
+  if (!html.includes('id="policy-summary"')) {
+    html=fill(html,'fee',fee(a));
+    html=fill(html,'treatment',a.surfboard_treatment);
+    html=fill(html,'size',a.size_rule);
+  }
   html=fill(html,'rating',a.surf_rating||'Not rated');
   html=fill(html,'handling',a.baggage_handling);
   if (a.last_checked) html=fill(html,'checked','Policy record checked ' + String(a.last_checked).slice(0,10));

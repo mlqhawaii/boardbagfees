@@ -57,7 +57,7 @@ async function load(){
     set('rating',`${ratingLights(a.surf_rating,a.surf_rating_score)}${esc(a.surf_rating||'Not rated')}`);
     set('handling',esc(a.baggage_handling));
     try{const ur=await fetch('/api/update-status',{cache:'no-store'});if(ur.ok){const us=await ur.json();if(us.last_success_at){const d=new Date(us.last_success_at);const pretty=Number.isNaN(d.getTime())?String(us.last_success_at).slice(0,10):d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric',timeZone:'Pacific/Honolulu'});set('checked',`Policy data checked ${esc(pretty)}`)}else set('checked','Updated weekly');}else set('checked','Updated weekly');}catch{set('checked','Updated weekly');}
-    const source=document.getElementById('official'); if(a.policy_url){source.href=a.policy_url; source.hidden=false;} else source.hidden=true;
+    const source=document.getElementById('official'); if(source){if(a.policy_url){source.href=a.policy_url; source.hidden=false;} else source.hidden=true;}
     const notes=document.getElementById('notes-wrap'); if(a.agent_notes){document.getElementById('notes').textContent=a.agent_notes; notes.hidden=false;}
   }catch(e){console.error(e); document.getElementById('facts').classList.add('error'); set('treatment','Live policy data is temporarily unavailable. Use the official airline link below and try again shortly.');}
 }

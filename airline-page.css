@@ -58,3 +58,14 @@ body{background:#fff}
 .airline-fare-link{display:inline-flex;align-items:center;justify-content:center;padding:9px 13px;border:1px solid #bcd6df;border-radius:999px;color:#0d5671;text-decoration:none;font-size:13px;font-weight:800;background:#fff}
 .airline-fare-link:hover{border-color:#7fb3c5;background:#eef8fb}
 .airline-fare-link:focus-visible{outline:3px solid rgba(23,112,142,.2);outline-offset:2px}
+
+.policy-summary {
+  max-width: 690px;
+  padding: 4px 16px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  line-height: 1.55;
+}
+.policy-summary p { margin: 10px 0; }
+.policy-summary a { font-weight: 700; }
