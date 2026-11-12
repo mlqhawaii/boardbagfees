@@ -18,6 +18,19 @@ const ratingLights=(label,score)=>{
 };
 const set=(id,v)=>{const el=document.getElementById(id); if(el) el.innerHTML=v||'<span class="skeleton">Not currently listed</span>';};
 
+const travelerReports = document.querySelector('.traveler-reports[data-airline-slug]');
+const policyHero = document.querySelector('.hero-detail');
+if (travelerReports && policyHero) {
+  policyHero.after(travelerReports);
+  const layout = travelerReports.querySelector('.traveler-layout');
+  const reviews = layout?.querySelector('.traveler-list-wrap');
+  if (reviews) layout.prepend(reviews);
+  const heading = travelerReports.querySelector('h2');
+  if (heading) heading.textContent = 'Traveler reviews';
+  const intro = travelerReports.querySelector('.traveler-reports-head p');
+  if (intro) intro.textContent = 'See what surfers actually paid and what happened at check-in.';
+}
+
 
 const addFareCta=()=>{
   const facts=document.getElementById('facts');
@@ -55,6 +68,10 @@ async function load(){
     }
     set('fee',esc(feeDisplay(a))); set('treatment',esc(a.surfboard_treatment)); set('size',esc(a.size_rule));
     set('rating',`${ratingLights(a.surf_rating,a.surf_rating_score)}${esc(a.surf_rating||'Not rated')}`);
+    if (slug === 'westjet' && /^bad$/i.test(a.surf_rating?.trim())) {
+      document.getElementById('rating')?.insertAdjacentHTML('afterend',
+        '<p class="rating-context">CAD $50–59 is the handling fee per board. WestJet also charges an oversize fee for boards over 157 cm (62 in), and extra-piece or overweight fees can apply.</p>');
+    }
     set('handling',esc(a.baggage_handling));
     try{const ur=await fetch('/api/update-status',{cache:'no-store'});if(ur.ok){const us=await ur.json();if(us.last_success_at){const d=new Date(us.last_success_at);const pretty=Number.isNaN(d.getTime())?String(us.last_success_at).slice(0,10):d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric',timeZone:'Pacific/Honolulu'});set('checked',`Policy data checked ${esc(pretty)}`)}else set('checked','Updated weekly');}else set('checked','Updated weekly');}catch{set('checked','Updated weekly');}
     const source=document.getElementById('official'); if(source){if(a.policy_url){source.href=a.policy_url; source.hidden=false;} else source.hidden=true;}

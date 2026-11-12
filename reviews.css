@@ -7,6 +7,9 @@
 @media(max-width:850px){.traveler-layout{grid-template-columns:1fr}.traveler-reports-head{align-items:flex-start;flex-direction:column}.traveler-pill{white-space:normal}}@media(max-width:600px){.traveler-reports{margin:28px 7px 0;padding:18px}.traveler-form{grid-template-columns:1fr}.traveler-field.wide,.traveler-submit{grid-column:auto}.traveler-reports-head h2{font-size:25px}}
 
 /* Detail-page version */
+.page .hero-detail + .traveler-reports{position:relative;margin:16px 0;scroll-margin-top:100px}
+.page .traveler-reports + .grid{margin-top:0}
+.page .rating-context{font-size:.9rem;line-height:1.5;margin:8px 0 0;font-weight:400}
 .page .traveler-reports{margin:30px 0 0}.page .traveler-layout{grid-template-columns:1fr 1fr}@media(max-width:760px){.page .traveler-layout{grid-template-columns:1fr}}
 
 /* Board/bag outcome reporting */
